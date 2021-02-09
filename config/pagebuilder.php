@@ -160,7 +160,8 @@ return [
      */
     'router' => [
         'class' => PHPageBuilder\Modules\Router\DatabasePageRouter::class,
-        'use_router' => true
+        'use_router' => true,
+        'route_prefix' => 'pagebuilder',
     ],
 
     /*
