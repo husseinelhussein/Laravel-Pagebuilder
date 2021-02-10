@@ -27,7 +27,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
-        $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/admin.php');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/front.php');
         $this->loadMigrationsFrom(__DIR__ . '/../migrations');
 
         if ($this->app->runningInConsole()) {
