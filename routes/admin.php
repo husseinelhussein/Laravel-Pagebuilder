@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use HansSchouten\LaravelPageBuilder\LaravelPageBuilder;
 
-Route::group(['middleware' => ['web','admin'], 'prefix' => 'admin/pagebuilder'], function () {
+Route::group([
+    'middleware' => ['admin'],
+    'prefix' => 'admin/pagebuilder',
+    'namespace' => 'HansSchouten\LaravelPageBuilder\Http\Controllers\Admin'
+], function () {
     // handle all website manager requests
-    Route::any( '/', function() {
-        $pageBuilder = new \PHPageBuilder\Modules\GrapesJS\PageBuilder();
-        $pageBuilder->handleRequest(null, 'edit');
-    });
+    Route::any( '/', 'PageBuilderController@adminPage');
 });

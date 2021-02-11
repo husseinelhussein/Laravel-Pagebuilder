@@ -50,9 +50,35 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/pagebuilder.php' => config_path('pagebuilder.php'),
         ], 'config');
-        $themes_url = public_path(config('pagebuilder.theme.folder_url') . '/demo');
+        $this->copyAssets();
+        $this->publishDemoTheme();
+    }
+
+    /**
+     *
+     */
+    public function copyAssets(){
+        $src = base_path('vendor/hansschouten/phpagebuilder/dist/pagebuilder/');
+        $dest = public_path(config('pagebuilder.general.assets_url') . '/pagebuilder');
+        $this->publishes([$src => $dest],'assets');
+    }
+
+    /**
+     * Publishes the demo theme files and assets.
+     *
+     */
+    public function publishDemoTheme(){
+        // publish demo theme:
+        $themes_path = config('pagebuilder.theme.folder') . '/demo';
         $this->publishes([
-            __DIR__ . '/../themes/demo' => $themes_url,
+            __DIR__ . '/../themes/demo' => $themes_path,
+        ], 'demo-theme');
+
+        // publish demo theme assets:
+        $themes_assets_path = public_path(config('pagebuilder.general.assets_url') . '/demo');
+        $stop = null;
+        $this->publishes([
+            __DIR__ . '/../themes/demo/public' => $themes_assets_path,
         ], 'demo-theme');
     }
 }
