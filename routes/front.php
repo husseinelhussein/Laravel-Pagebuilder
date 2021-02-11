@@ -10,12 +10,3 @@ Route::group([
     // Handle all assets requests
     Route::get( '/{path}', 'AssetsController@assets')->where('path', '.*');
 });
-
-Route::group([
-    'middleware' => ['web'],
-    'prefix' => 'page',
-    'namespace' => 'HansSchouten\LaravelPageBuilder\Http\Controllers\Front'
-], function () {
-    // route for a page resource:
-    Route::get( '/{id}', 'PageController@view');
-});

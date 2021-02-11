@@ -25,11 +25,7 @@
 </head>
 
 <body>
-
-<?php
-require __DIR__ . '/pagebuilder.php';
-?>
-
+@include('pagebuilder::pagebuilder')
 <script src="<?= phpb_asset('pagebuilder/app.js') ?>"></script>
 <?= $pageBuilder->customScripts('body'); ?>
 </body>

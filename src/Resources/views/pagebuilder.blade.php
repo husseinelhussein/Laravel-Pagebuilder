@@ -43,7 +43,8 @@ window.injectionScriptUrl = '<?= phpb_asset('pagebuilder/page-injection.js') ?>'
 window.renderLanguageVariantUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderLanguageVariant', 'page' => $page->getId()]) ?>';
 
 <?php
-$config = require __DIR__ . '/grapesjs/config.php';
+$origLocation = base_path('vendor/hansschouten/phpagebuilder/src/Modules/GrapesJS/resources/views');
+$config = require $origLocation . '/grapesjs/config.php';
 ?>
 let config = <?= json_encode($config) ?>;
 if (window.customConfig !== undefined) {
@@ -90,10 +91,10 @@ editor.setStyle(window.initialStyle);
 </script>
 
 <?php
-require __DIR__ . '/grapesjs/asset-manager.php';
-require __DIR__ . '/grapesjs/component-type-manager.php';
-require __DIR__ . '/grapesjs/style-manager.php';
-require __DIR__ . '/grapesjs/trait-manager.php';
+require $origLocation . '/grapesjs/asset-manager.php';
+require $origLocation . '/grapesjs/component-type-manager.php';
+require $origLocation . '/grapesjs/style-manager.php';
+require $origLocation . '/grapesjs/trait-manager.php';
 ?>
 
 <button id="toggle-sidebar" class="btn">

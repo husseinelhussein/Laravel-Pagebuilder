@@ -1,5 +1,5 @@
 <?php
-namespace HansSchouten\LaravelPageBuilder\Repositories;
+namespace HansSchouten\LaravelPageBuilder\Orig\Repositories;
 
 use PHPageBuilder\Repositories\PageRepository as BasePageRepository;
 

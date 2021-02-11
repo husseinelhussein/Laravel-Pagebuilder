@@ -30,7 +30,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/../routes/admin.php');
         $this->loadRoutesFrom(__DIR__ . '/../routes/front.php');
         $this->loadMigrationsFrom(__DIR__ . '/../migrations');
-
+        $this->loadViewsFrom(__DIR__ . '/Resources/views', 'pagebuilder');
         if ($this->app->runningInConsole()) {
             $this->commands([
                 CreateTheme::class,
