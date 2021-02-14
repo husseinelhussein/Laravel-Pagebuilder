@@ -4,7 +4,6 @@ namespace HansSchouten\LaravelPageBuilder;
 
 use Illuminate\View\View;
 use PHPageBuilder\Contracts\PageContract;
-use PHPageBuilder\Modules\GrapesJS\Block\BlockAdapter;
 use PHPageBuilder\Modules\GrapesJS\PageBuilder;
 use PHPageBuilder\Modules\GrapesJS\PageRenderer;
 use PHPageBuilder\Modules\GrapesJS\Thumb\ThumbGenerator;
@@ -88,14 +87,14 @@ class NativePageBuilderWrapper extends PageBuilder
 
         // init variables that should be accessible in the view
         $pageBuilder = $this;
-        $pageRenderer = phpb_instance(PageRenderer::class, [$this->theme, $page, true]);
+        $pageRenderer = phpb_instance(PageRendererWrapper::class, [$this->theme, $page, true]);
 
         // create an array of theme blocks and theme block settings for in the page builder sidebar
         $blocks = [];
         $blockSettings = [];
         foreach ($this->theme->getThemeBlocks() as $themeBlock) {
             $slug = phpb_e($themeBlock->getSlug());
-            $adapter = new BlockAdapter($pageRenderer, $themeBlock);
+            $adapter = new BlockAdapterWrapper($pageRenderer, $themeBlock);
             $blockSettings[$slug] = $adapter->getBlockSettingsArray();
 
             if ($themeBlock->get('hidden') !== true) {
@@ -121,4 +120,20 @@ class NativePageBuilderWrapper extends PageBuilder
         ];
         return view('pagebuilder::layout', $vars);
     }
+
+    /**
+     * Overrides the function to return PageRendererWrapper
+     * @param PageContract $page
+     * @param null $language
+     * @return string
+     */
+    public function renderPage(PageContract $page, $language = null): string
+    {
+        $pageRenderer = phpb_instance(PageRendererWrapper::class, [$this->theme, $page]);
+        if (! is_null($language)) {
+            $pageRenderer->setLanguage($language);
+        }
+        return $pageRenderer->render();
+    }
+
 }

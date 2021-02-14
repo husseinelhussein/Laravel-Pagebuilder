@@ -27,7 +27,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "HansSchouten\\LaravelPageBuilder\\ServiceProvider"
+              "HansSchouten\\LaravelPageBuilder\\Providers\\LaravelPageBuilderServiceProvider"
             ],
             "aliases": {
                 "PageBuilder": "HansSchouten\\LaravelPageBuilder\\Facade"

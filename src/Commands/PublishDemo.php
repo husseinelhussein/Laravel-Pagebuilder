@@ -30,7 +30,7 @@ class PublishDemo extends Command
     public function handle()
     {
         Artisan::call('vendor:publish', [
-            '--provider' => 'HansSchouten\LaravelPageBuilder\ServiceProvider',
+            '--provider' => 'HansSchouten\LaravelPageBuilder\Providers\LaravelPageBuilderServiceProvider',
             '--tag' => 'demo-theme'
         ]);
 

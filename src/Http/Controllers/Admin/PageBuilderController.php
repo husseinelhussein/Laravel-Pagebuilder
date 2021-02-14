@@ -17,6 +17,9 @@ class PageBuilderController  extends Controller {
         $pageBuilder = new NativePageBuilderWrapper();
         $route = $request->query('route')?? null;
         $action = $request->query('action')?? 'edit';
+        if(!isset($_GET['page']) || !$_GET['page'] || empty($_GET['page'])){
+            abort(404);
+        }
         return $pageBuilder->handleRequest($route, $action);
     }
 }

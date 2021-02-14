@@ -32,7 +32,7 @@ class CreateTheme extends Command
     {
         $themeName = $this->argument('name');
         $themePath = base_path(config('pagebuilder.theme.folder_url') . '/' . $themeName);
-        File::copyDirectory(__DIR__ . '/../../themes/stub', $themePath);
+        File::copyDirectory(__DIR__ . '/../Resources/themes/stub', $themePath);
         Artisan::call('pagebuilder:publish-theme', ['theme' => $themeName]);
     }
 

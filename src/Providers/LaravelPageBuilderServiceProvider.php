@@ -1,14 +1,15 @@
 <?php
 
-namespace HansSchouten\LaravelPageBuilder;
+namespace HansSchouten\LaravelPageBuilder\Providers;
 
+use Illuminate\Support\ServiceProvider;
 use HansSchouten\LaravelPageBuilder\Commands\CreateTheme;
 use HansSchouten\LaravelPageBuilder\Commands\PublishDemo;
 use HansSchouten\LaravelPageBuilder\Commands\PublishTheme;
 use PHPageBuilder\PHPageBuilder;
 use Exception;
-
-class ServiceProvider extends \Illuminate\Support\ServiceProvider
+use DirectoryIterator;
+class LaravelPageBuilderServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -27,10 +28,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
-        $this->loadRoutesFrom(__DIR__ . '/../routes/admin.php');
-        $this->loadRoutesFrom(__DIR__ . '/../routes/front.php');
-        $this->loadMigrationsFrom(__DIR__ . '/../migrations');
-        $this->loadViewsFrom(__DIR__ . '/Resources/views', 'pagebuilder');
+        $this->loadRoutesFrom(__DIR__ . '/../Http/admin.php');
+        $this->loadRoutesFrom(__DIR__ . '/../Http/front.php');
+        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
         if ($this->app->runningInConsole()) {
             $this->commands([
                 CreateTheme::class,
@@ -48,10 +48,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->make('phpPageBuilder');
 
         $this->publishes([
-            __DIR__ . '/../config/pagebuilder.php' => config_path('pagebuilder.php'),
+            __DIR__ . '/../../publishable/config/pagebuilder.php' => config_path('pagebuilder.php'),
         ], 'config');
         $this->copyAssets();
         $this->publishDemoTheme();
+        $this->addThemesViews();
     }
 
     /**
@@ -71,14 +72,23 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         // publish demo theme:
         $themes_path = config('pagebuilder.theme.folder') . '/demo';
         $this->publishes([
-            __DIR__ . '/../themes/demo' => $themes_path,
+            __DIR__ . '/../../publishable/themes/demo' => $themes_path,
         ], 'demo-theme');
 
         // publish demo theme assets:
         $themes_assets_path = public_path(config('pagebuilder.general.assets_url') . '/demo');
         $stop = null;
         $this->publishes([
-            __DIR__ . '/../themes/demo/public' => $themes_assets_path,
+            __DIR__ . '/../../publishable/themes/demo/public' => $themes_assets_path,
         ], 'demo-theme');
+    }
+
+    public function addThemesViews(){
+        $themes_path = config('pagebuilder.theme.folder');
+        $views = [
+            __DIR__ . '/../Resources/views',
+            $themes_path,
+        ];
+        view()->addNamespace('pagebuilder', $views);
     }
 }

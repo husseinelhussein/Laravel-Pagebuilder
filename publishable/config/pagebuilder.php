@@ -144,7 +144,7 @@ return [
      |
      */
     'theme' => [
-        'class' => PHPageBuilder\Theme::class,
+        'class' => \HansSchouten\LaravelPageBuilder\ThemeWrapper::class,
         'folder' => base_path('themes'),
         'folder_url' => '/themes',
         'active_theme' => 'demo'
