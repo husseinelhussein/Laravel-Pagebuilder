@@ -60,7 +60,7 @@ class PageRendererWrapper extends PageRenderer {
      */
     public function renderBlock($slug, $id = null, $context = null, $maxDepth = 25)
     {
-        $themeBlock = new ThemeBlockWrapper($this->theme, $slug);
+        $themeBlock = new ThemeBlockWrapper($this->theme, $slug, $this->forPageBuilder);
         $id = $id ?? $themeBlock->getSlug();
         $context = $context[$id] ?? $this->pageBlocksData[$id] ?? [];
 

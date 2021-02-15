@@ -19,12 +19,12 @@ class ThemeWrapper extends Theme
         if (! file_exists($this->getFolder() . '/blocks')) {
             return;
         }
-
+        $forPageBuilder = isset($_GET['page']) && !empty($_GET['page']);
         $blocksDirectory = new DirectoryIterator($this->getFolder() . '/blocks');
         foreach ($blocksDirectory as $entry) {
             if ($entry->isDir() && ! $entry->isDot()) {
                 $blockSlug = $entry->getFilename();
-                $block = new ThemeBlockWrapper($this, $blockSlug);
+                $block = new ThemeBlockWrapper($this, $blockSlug, $forPageBuilder);
                 $this->blocks[$blockSlug] = $block;
             }
         }
