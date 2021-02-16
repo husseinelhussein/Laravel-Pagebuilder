@@ -38,7 +38,7 @@ class PageRendererWrapper extends PageRenderer {
                 'body' => $body,
                 'forPageBuilder' => $this->forPageBuilder,
             ];
-            $pageHtml = view()->make($layoutPath, $vars)->render();
+            $pageHtml = view()->make($layoutPath, $vars);
         } else {
             $pageHtml = $body;
         }
@@ -47,6 +47,32 @@ class PageRendererWrapper extends PageRenderer {
         $pageHtml = $this->parseShortcodes($pageHtml);
 
         return $pageHtml;
+    }
+
+    public function renderBody($mainContainerIndex = 0)
+    {
+        $html = '';
+        $data = $this->pageData;
+
+        if (isset($data['html']) && is_array($data['html'])) {
+            $html = $this->parseShortcodes($data['html'][$mainContainerIndex]);
+            // render html for each content container, to ensure all rendered blocks are accessible in the pagebuilder
+            if (phpb_in_editmode()) {
+                foreach ($data['html'] as $contentContainerHtml) {
+                    $this->parseShortcodes($contentContainerHtml);
+                }
+            }
+        }
+        // backwards compatibility, html stored for only one layout container (@todo: remove this at the first mayor version)
+        if (isset($data['html']) && is_string($data['html'])) {
+            $html = $this->parseShortcodes($data['html']);
+        }
+        // vue.js will complain if we add custom styles
+//        if (isset($data['css'])) {
+//            $html .= '<style>' . $data['css'] . '</style>';
+//        }
+
+        return $html;
     }
 
     /** overrides the function to use BlockRendererWrapper and ThemeBlockWrapper.

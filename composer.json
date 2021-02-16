@@ -26,9 +26,6 @@
     "prefer-stable": true,
     "extra": {
         "laravel": {
-            "providers": [
-              "HansSchouten\\LaravelPageBuilder\\Providers\\LaravelPageBuilderServiceProvider"
-            ],
             "aliases": {
                 "PageBuilder": "HansSchouten\\LaravelPageBuilder\\Facade"
             }

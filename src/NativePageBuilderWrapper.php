@@ -136,4 +136,17 @@ class NativePageBuilderWrapper extends PageBuilder
         return $pageRenderer->render();
     }
 
+    public function renderPageBuilderBlock(PageContract $page, string $language, $blockData = [])
+    {
+        phpb_set_in_editmode();
+
+        $blockData = is_array($blockData) ? $blockData : [];
+        $page->setData(['data' => $blockData], false);
+
+        /** @var PageRendererWrapper $pageRenderer */
+        $pageRenderer = phpb_instance(PageRendererWrapper::class, [$this->theme, $page, true]);
+        $pageRenderer->setLanguage($language);
+        echo $pageRenderer->parseShortcodes($blockData['html'], $blockData['blocks']);
+    }
+
 }
