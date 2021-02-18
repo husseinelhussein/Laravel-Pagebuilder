@@ -52,6 +52,7 @@ class LaravelPageBuilderServiceProvider extends ServiceProvider
         ], 'config');
         $this->copyAssets();
         $this->publishDemoTheme();
+        $this->publishPublicThemesFiles();
         $this->addThemesViews();
     }
 
@@ -81,6 +82,36 @@ class LaravelPageBuilderServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../../publishable/themes/demo/public' => $themes_assets_path,
         ], 'demo-theme');
+    }
+
+    /**
+     * Publishes the demo theme files and assets.
+     *
+     */
+    public function publishPublicThemesFiles(){
+        // look for public files in all themes:
+        $publishables = [];
+        $themes_path = config('pagebuilder.theme.folder');
+        $themes = new DirectoryIterator($themes_path);
+        /** @var DirectoryIterator $theme */
+        foreach ($themes as $theme) {
+            if($theme->isDir()){
+                // look for public folder:
+                $path = $theme->getPathname() . '/publishable';
+                $public_contents = null;
+                try {
+                    $public_contents = new DirectoryIterator($path);
+
+                } catch (\Exception $e){
+                    // probably not readable or doesn't exist
+                }
+                if (!$public_contents) {
+                    continue;
+                }
+                $publishables[$path] = public_path(config('pagebuilder.general.assets_url') . '/' . $theme->getFilename());
+            }
+        }
+        $this->publishes($publishables,'assets');
     }
 
     public function addThemesViews(){
