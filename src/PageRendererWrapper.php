@@ -37,6 +37,7 @@ class PageRendererWrapper extends PageRenderer {
                 'page' => $this->page,
                 'body' => $body,
                 'forPageBuilder' => $this->forPageBuilder,
+                'css' => isset($this->pageData['css'])? $this->pageData['css']: null,
             ];
             $pageHtml = view()->make($layoutPath, $vars);
         } else {
