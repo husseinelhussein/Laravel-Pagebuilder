@@ -13,6 +13,7 @@ return [
         'base_url' => env('APP_URL'),
         'language' => 'en',
         'assets_url' => '/assets',
+        'editor_css' => '',
         'uploads_url' => '/uploads'
     ],
 
@@ -107,7 +108,7 @@ return [
      |
      */
     'page' => [
-        'class' => PHPageBuilder\Page::class,
+        'class' => HansSchouten\LaravelPageBuilder\Page::class,
         'table' => 'pages',
         'translation' => [
             'class' => PHPageBuilder\PageTranslation::class,
@@ -144,7 +145,6 @@ return [
      |
      */
     'theme' => [
-        'class' => \HansSchouten\LaravelPageBuilder\ThemeWrapper::class,
         'folder' => base_path('themes'),
         'folder_url' => '/themes',
         'active_theme' => 'demo'

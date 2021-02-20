@@ -2,6 +2,7 @@
 
 namespace HansSchouten\LaravelPageBuilder;
 
+use HansSchouten\LaravelPageBuilder\Contracts\ThemeContract;
 use Illuminate\View\View;
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Modules\GrapesJS\PageBuilder;
@@ -12,6 +13,61 @@ use PHPageBuilder\Repositories\UploadRepository;
 
 class NativePageBuilderWrapper extends PageBuilder
 {
+    /** @var ThemeContract */
+    protected $theme;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->loadTheme();
+    }
+
+
+    /**
+     * loads Theme class from the active theme folder.
+     * @return void|null
+     */
+    protected function loadTheme(){
+        $themes_folder = phpb_config('theme.folder');
+        $file = $themes_folder . '/' . phpb_config('theme.active_theme') . '/Theme.php';
+        if(file_exists($file)){
+            require_once $file;
+            $theme_namespace = $this->getNamespace();
+            $theme_class = $theme_namespace . '\Theme';
+            $this->theme = new $theme_class(phpb_config('theme'), phpb_config('theme.active_theme'));
+            return;
+        }
+        $this->theme = new ThemeWrapper(phpb_config('theme'), phpb_config('theme.active_theme'));
+        return null;
+    }
+
+    /**
+     * Return the namespace to the folder of the current theme.
+     *
+     * @return string
+     */
+    protected function getNamespace()
+    {
+        $themesPath = phpb_config('theme.folder');
+        $themesFolderName = basename($themesPath);
+        $currentTheme = '/' . phpb_config('theme.active_theme');
+        $namespacePath = $themesFolderName . str_replace($themesPath, '', $currentTheme);
+
+        // convert each character after a - to uppercase
+        $namespace = implode('-', array_map('ucfirst', explode('-', $namespacePath)));
+        // convert each character after a _ to uppercase
+        $namespace = implode('_', array_map('ucfirst', explode('-', $namespace)));
+        // convert each character after a / to uppercase
+        $namespace = implode('/', array_map('ucfirst', explode('/', $namespace)));
+        // remove all dashes
+        $namespace = str_replace('-', '', $namespace);
+        // remove all underscores
+        $namespace = str_replace('_', '', $namespace);
+        // replace / by \
+        $namespace = str_replace('/', '\\', $namespace);
+
+        return $namespace;
+    }
 
     /**
      * @param $route
@@ -117,6 +173,7 @@ class NativePageBuilderWrapper extends PageBuilder
           'blockSettings' => $blockSettings,
           'pageRenderer' => $pageRenderer,
           'assets' => $assets,
+          'theme' => $this->theme,
         ];
         return view('pagebuilder::layout', $vars);
     }

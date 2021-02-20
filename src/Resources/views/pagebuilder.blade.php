@@ -127,14 +127,14 @@ require $origLocation . '/grapesjs/trait-manager.php';
         <?= phpb_trans('pagebuilder.save-page') ?>
     </button>
 
-    <a id="view-page" href="<?= phpb_e(phpb_full_url($page->getRoute())) ?>" target="_blank" class="btn">
+    <a id="view-page" href="<?= $theme->getViewLink($page) ?>" target="_blank" class="btn">
         <i class="fa fa-external-link"></i>
-        <?= phpb_trans('pagebuilder.view-page') ?>
+        <?= $theme->getViewText() ?>
     </a>
 
-    <a id="go-back" href="<?= phpb_e(phpb_full_url(phpb_config('pagebuilder.actions.back'))) ?>" class="btn">
+    <a id="go-back" href="<?= $theme->getBackLink($page) ?>" class="btn">
         <i class="fa fa-arrow-circle-left"></i>
-        <?= phpb_trans('pagebuilder.go-back') ?>
+        <?= $theme->getBackText() ?>
     </a>
 </div>
 

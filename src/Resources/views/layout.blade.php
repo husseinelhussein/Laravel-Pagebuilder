@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="<?= phpb_asset('pagebuilder/app.css') ?>">
+    @if(config('pagebuilder.general.editor_css') && !empty(config('pagebuilder.general.editor_css')))
+        <link rel="stylesheet" href="<?= asset(config('pagebuilder.general.editor_css')) ?>">
+    @endif
     <?= $pageBuilder->customStyle(); ?>
 
     <script src="https://cdn.jsdelivr.net/npm/grapesjs@0.15.9/dist/grapes.min.js"></script>

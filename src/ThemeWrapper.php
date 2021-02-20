@@ -4,11 +4,44 @@
 namespace HansSchouten\LaravelPageBuilder;
 
 
+use HansSchouten\LaravelPageBuilder\Contracts\ThemeContract;
+use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Theme;
-use PHPageBuilder\ThemeBlock;
 use DirectoryIterator;
-class ThemeWrapper extends Theme
+class ThemeWrapper extends Theme implements ThemeContract
 {
+    /**
+     * @inheritDoc
+     */
+    public function getBackLink(PageContract $page, $locale = null): string
+    {
+        return phpb_e(phpb_full_url(phpb_config('pagebuilder.actions.back')));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBackText($locale = null): string
+    {
+        return phpb_trans('pagebuilder.go-back');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getViewLink(PageContract $page, $locale = null): string
+    {
+        return phpb_e(phpb_full_url($page->getRoute($locale)));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getViewText($locale = null): string
+    {
+        return phpb_trans('pagebuilder.view-page');
+    }
+
     /**
      * Overrides the function to use ThemeBlockWrapper.
      */
