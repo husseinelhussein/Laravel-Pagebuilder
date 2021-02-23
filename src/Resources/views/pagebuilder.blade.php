@@ -38,9 +38,9 @@ window.themeBlocks = <?= json_encode($blocks) ?>;
 window.blockSettings = <?= json_encode($blockSettings) ?>;
 window.pageBlocks = <?= json_encode($pageRenderer->getPageBlocksData()) ?>;
 window.pages = <?= json_encode($pageBuilder->getPages()) ?>;
-window.renderBlockUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderBlock', 'page' => $page->getId()]) ?>';
+window.renderBlockUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderBlock', 'page_id' => $page->getId()]) ?>';
 window.injectionScriptUrl = '<?= phpb_asset('pagebuilder/page-injection.js') ?>';
-window.renderLanguageVariantUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderLanguageVariant', 'page' => $page->getId()]) ?>';
+window.renderLanguageVariantUrl = '<?= phpb_url('pagebuilder', ['action' => 'renderLanguageVariant', 'page_id' => $page->getId()]) ?>';
 
 <?php
 $origLocation = base_path('vendor/hansschouten/phpagebuilder/src/Modules/GrapesJS/resources/views');
@@ -121,7 +121,7 @@ require $origLocation . '/grapesjs/trait-manager.php';
 </div>
 
 <div id="sidebar-bottom-buttons">
-    <button id="save-page" class="btn" data-url="<?= phpb_url('pagebuilder', ['action' => 'store', 'page' => $page->getId()]) ?>">
+    <button id="save-page" class="btn" data-url="<?= phpb_url('pagebuilder', ['action' => 'store', 'page_id' => $page->getId()]) ?>">
         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
         <i class="fa fa-save"></i>
         <?= phpb_trans('pagebuilder.save-page') ?>

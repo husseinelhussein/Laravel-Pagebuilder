@@ -86,7 +86,7 @@ class NativePageBuilderWrapper extends PageBuilder
         }
 
         if (is_null($page)) {
-            $pageId = $_GET['page'] ?? null;
+            $pageId = $_GET['page_id'] ?? null;
             $pageRepository = new PageRepository;
             $page = $pageRepository->findWithId($pageId);
         }

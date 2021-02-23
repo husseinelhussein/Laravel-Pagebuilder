@@ -52,7 +52,7 @@ class ThemeWrapper extends Theme implements ThemeContract
         if (! file_exists($this->getFolder() . '/blocks')) {
             return;
         }
-        $forPageBuilder = isset($_GET['page']) && !empty($_GET['page']);
+        $forPageBuilder = isset($_GET['page_id']) && !empty($_GET['page_id']);
         $blocksDirectory = new DirectoryIterator($this->getFolder() . '/blocks');
         foreach ($blocksDirectory as $entry) {
             if ($entry->isDir() && ! $entry->isDot()) {
