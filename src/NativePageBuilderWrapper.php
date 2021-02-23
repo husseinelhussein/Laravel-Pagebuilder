@@ -9,6 +9,7 @@ use PHPageBuilder\Modules\GrapesJS\PageBuilder;
 use PHPageBuilder\Modules\GrapesJS\PageRenderer;
 use PHPageBuilder\Modules\GrapesJS\Thumb\ThumbGenerator;
 use PHPageBuilder\Repositories\PageRepository;
+use PHPageBuilder\Repositories\PageTranslationRepository;
 use PHPageBuilder\Repositories\UploadRepository;
 
 class NativePageBuilderWrapper extends PageBuilder
@@ -79,12 +80,18 @@ class NativePageBuilderWrapper extends PageBuilder
     public function handleRequest($route, $action, PageContract $page = null)
     {
         phpb_set_in_editmode();
-
         if ($route === 'thumb_generator') {
             $thumbGenerator = new ThumbGenerator($this->theme);
             return $thumbGenerator->handleThumbRequest($action);
         }
-
+        if ($route && !$page) {
+            $pageRepository = new PageTranslationRepository();
+            $pageTranslation = $pageRepository->findWhere('route', $route);
+            if($pageTranslation){
+                $pageTranslation = $pageTranslation[0];
+                $page = $pageTranslation->getPage();
+            }
+        }
         if (is_null($page)) {
             $pageId = $_GET['page_id'] ?? null;
             $pageRepository = new PageRepository;
