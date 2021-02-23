@@ -27,7 +27,10 @@ class Page extends BasePage implements PageContract
      */
     public function getVariables(): array
     {
-        return $this->variables;
+        if($this->variables){
+            return $this->variables;
+        }
+        return [];
     }
 
     public function setVariables(array $variables): void
