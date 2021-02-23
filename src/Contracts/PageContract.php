@@ -12,4 +12,14 @@ interface PageContract extends BaseContract
      * @return array|null
      */
     public function getMeta();
+
+    /**
+     * @return array
+     */
+    public function getVariables(): array;
+
+    /**
+     * @param array $variables
+     */
+    public function setVariables(array $variables):void;
 }

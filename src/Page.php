@@ -6,6 +6,11 @@ use PHPageBuilder\Page as BasePage;
 class Page extends BasePage implements PageContract
 {
     /**
+     * @var array variables that should be accessible in the view
+     */
+    protected $variables;
+
+    /**
      * Gets the page meta
      *
      * @return array|null
@@ -16,4 +21,18 @@ class Page extends BasePage implements PageContract
         }
         return null;
     }
+
+    /**
+     * @return array
+     */
+    public function getVariables(): array
+    {
+        return $this->variables;
+    }
+
+    public function setVariables(array $variables): void
+    {
+        $this->variables = $variables;
+    }
+
 }

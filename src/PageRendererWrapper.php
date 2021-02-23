@@ -32,6 +32,7 @@ class PageRendererWrapper extends PageRenderer {
         $layoutPath = $this->getPageLayoutPath();
         if ($layoutPath) {
             // init variables that should be accessible in the view
+            $_vars = $this->page->getVariables();
             $vars = [
                 'renderer' => $this,
                 'page' => $this->page,
@@ -39,6 +40,7 @@ class PageRendererWrapper extends PageRenderer {
                 'forPageBuilder' => $this->forPageBuilder,
                 'css' => isset($this->pageData['css'])? $this->pageData['css']: null,
             ];
+            $vars = array_merge($vars, $_vars);
             $pageHtml = view()->make($layoutPath, $vars);
         } else {
             $pageHtml = $body;
