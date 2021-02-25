@@ -52,6 +52,7 @@ class LaravelPageBuilderServiceProvider extends ServiceProvider
         ], 'config');
         $this->copyAssets();
         $this->publishDemoTheme();
+        $this->loadThemesClasses();
         $this->publishPublicThemesFiles();
         $this->addThemesViews();
     }
@@ -82,6 +83,38 @@ class LaravelPageBuilderServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../../publishable/themes/demo/public' => $themes_assets_path,
         ], 'demo-theme');
+    }
+
+    /**
+     * Auto-loads themes classes files:
+     *
+     */
+    public function loadThemesClasses(){
+        $themes_path = config('pagebuilder.theme.folder');
+        // iterate through each theme folder looking for "vendor" dir
+        $themes = new DirectoryIterator($themes_path);
+        /** @var DirectoryIterator $theme */
+        foreach ($themes as $theme) {
+            if($theme->isDir()){
+                // look for "vendor" folder:
+                $path = $theme->getPathname() . '/vendor';
+                $vendor_contents = null;
+                try {
+                    $vendor_contents = new DirectoryIterator($path);
+
+                } catch (\Exception $e){
+                    // probably not readable or doesn't exist
+                }
+                if (!$vendor_contents) {
+                    continue;
+                }
+                // vendor exists, check vendor/autoload.php file:
+                if(file_exists($path . '/autoload.php')){
+                    // exists, require it
+                    require_once $path . '/autoload.php';
+                }
+            }
+        }
     }
 
     /**
