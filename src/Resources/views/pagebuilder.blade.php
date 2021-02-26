@@ -44,6 +44,8 @@ window.renderLanguageVariantUrl = '<?= phpb_url('pagebuilder', ['action' => 'ren
 
 <?php
 $origLocation = base_path('vendor/hansschouten/phpagebuilder/src/Modules/GrapesJS/resources/views');
+$origLocation = base_path('vendor/hansschouten/laravel-pagebuilder/src/Resources/views');
+
 $config = require $origLocation . '/grapesjs/config.php';
 ?>
 let config = <?= json_encode($config) ?>;

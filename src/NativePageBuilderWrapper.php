@@ -8,9 +8,11 @@ use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Modules\GrapesJS\PageBuilder;
 use PHPageBuilder\Modules\GrapesJS\PageRenderer;
 use PHPageBuilder\Modules\GrapesJS\Thumb\ThumbGenerator;
+use PHPageBuilder\Modules\GrapesJS\Upload\Uploader;
 use PHPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Repositories\PageTranslationRepository;
 use PHPageBuilder\Repositories\UploadRepository;
+use PHPageBuilder\UploadedFile;
 
 class NativePageBuilderWrapper extends PageBuilder
 {
@@ -211,6 +213,32 @@ class NativePageBuilderWrapper extends PageBuilder
         $pageRenderer = phpb_instance(PageRendererWrapper::class, [$this->theme, $page, true]);
         $pageRenderer->setLanguage($language);
         echo $pageRenderer->parseShortcodes($blockData['html'], $blockData['blocks']);
+    }
+
+    public function handleFileUpload()
+    {
+        $file = request()->file('files');
+        $originalMime = $file->getMimeType();
+        $originalFile = $file->getClientOriginalName();
+        $publicId = sha1(uniqid(rand(), true));
+        $res = $file->store('uploads');
+        $uploadRepository = new UploadRepository;
+        /** @var UploadedFile $uploadedFile */
+        $uploadedFile = $uploadRepository->create([
+            'public_id' => $publicId,
+            'original_file' => $originalFile,
+            'mime_type' => $originalMime,
+            'server_file' => $res
+        ]);
+        $stop = null;
+        echo json_encode([
+            'data' => [
+                'public_id' => $publicId,
+                'src' => $uploadedFile->getUrl(),
+                'type' => 'image'
+            ]
+        ]);
+        exit();
     }
 
 }
