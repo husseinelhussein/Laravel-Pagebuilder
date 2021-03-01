@@ -129,7 +129,7 @@ class LaravelPageBuilderServiceProvider extends ServiceProvider
         /** @var DirectoryIterator $theme */
         foreach ($themes as $theme) {
             if($theme->isDir()){
-                // look for public folder:
+                // look for publishable folder:
                 $path = $theme->getPathname() . '/publishable';
                 $public_contents = null;
                 try {
