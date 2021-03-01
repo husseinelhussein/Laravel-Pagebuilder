@@ -15,8 +15,7 @@
     ],
     "require": {
         "php": ">=7.0",
-        "hansschouten/phpagebuilder": "^0.18",
-        "cweagans/composer-patches": "~1.0"
+        "hansschouten/phpagebuilder": "^0.18"
     },
     "autoload": {
         "psr-4": {
@@ -29,11 +28,6 @@
         "laravel": {
             "aliases": {
                 "PageBuilder": "HansSchouten\\LaravelPageBuilder\\Facade"
-            }
-        },
-        "patches": {
-            "hansschouten/phpagebuilder": {
-                "use laravl session": "vendor/hansschouten/laravel-pagebuilder/laravel_session.patch"
             }
         }
     }
