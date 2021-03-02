@@ -3,6 +3,8 @@ namespace HansSchouten\LaravelPageBuilder\Contracts;
 
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Contracts\ThemeContract as BaseThemeContract;
+use stringEncode\Exception;
+
 interface ThemeContract extends BaseThemeContract
 {
     /**
@@ -43,4 +45,11 @@ interface ThemeContract extends BaseThemeContract
      * @return string
      */
     public function getViewText($locale = null): string;
+
+    /**
+     * Gets the theme slug.
+     *
+     * @return string
+     */
+    public function getThemeSlug(): string;
 }

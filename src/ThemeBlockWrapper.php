@@ -4,7 +4,7 @@
 namespace HansSchouten\LaravelPageBuilder;
 
 
-use PHPageBuilder\Contracts\ThemeContract;
+use HansSchouten\LaravelPageBuilder\Contracts\ThemeContract;
 use PHPageBuilder\Modules\GrapesJS\Block\BaseController;
 use PHPageBuilder\ThemeBlock;
 
@@ -76,6 +76,23 @@ class ThemeBlockWrapper extends ThemeBlock
             return $this->getNamespace() . '\\' . $this->controllerClassName;
         }
         return BaseController::class;
+    }
+
+    /**
+     * Return the file path of the thumbnail of this block.
+     *
+     * @return string
+     */
+    public function getThumbPath()
+    {
+        return $this->get('thumbnail');
+    }
+
+    public function getThumbUrl()
+    {
+        $base = phpb_config('general.assets_url') . '/' . $this->theme->getThemeSlug();
+        $asset = asset($base . '/assets/block-thumbs/' . $this->get('thumbnail'));
+        return $asset;
     }
 
 }

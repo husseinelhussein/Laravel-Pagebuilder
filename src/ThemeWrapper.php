@@ -64,7 +64,7 @@ class ThemeWrapper extends Theme implements ThemeContract
     }
 
     /**
-     * @return string
+     * @inheritDoc
      */
     public function getThemeSlug(): string
     {
