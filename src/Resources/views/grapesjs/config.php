@@ -15,7 +15,7 @@ return [
         'upload' => phpb_url('pagebuilder', ['action' => 'upload', 'page_id' => $page->getId()]),
         'uploadName' => 'files',
         'multiUpload' => false,
-        'assets' => $assets
+        'assets' => $assets,
     ],
     'styleManager' => [
         'sectors' => [[

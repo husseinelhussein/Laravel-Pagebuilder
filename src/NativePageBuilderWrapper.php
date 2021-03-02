@@ -3,6 +3,7 @@
 namespace HansSchouten\LaravelPageBuilder;
 
 use HansSchouten\LaravelPageBuilder\Contracts\ThemeContract;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Modules\GrapesJS\PageBuilder;
@@ -170,8 +171,9 @@ class NativePageBuilderWrapper extends PageBuilder
         // create an array of all uploaded assets
         $assets = [];
         foreach ((new UploadRepository)->getAll() as $file) {
+            $src = phpb_config('general.uploads_url') . '/' . $file->server_file;
             $assets[] = [
-                'src' => $file->getUrl(),
+                'src' => $src,
                 'public_id' => $file->public_id
             ];
         }
@@ -230,15 +232,42 @@ class NativePageBuilderWrapper extends PageBuilder
             'mime_type' => $originalMime,
             'server_file' => $res
         ]);
-        $stop = null;
+        $src = phpb_config('general.uploads_url') . '/' . $res;
         echo json_encode([
             'data' => [
-                'public_id' => $publicId,
-                'src' => $uploadedFile->getUrl(),
+                'src' => $src,
                 'type' => 'image'
             ]
         ]);
         exit();
+    }
+
+    public function handleFileDelete()
+    {
+        $uploadRepository = new UploadRepository;
+        $uploadedFileResult = $uploadRepository->findWhere('public_id', $_POST['id']);
+        if(empty($uploadedFileResult)){
+            $res = [
+                'success' => false,
+                'message' => 'File not found'
+            ];
+            return response()->json($res);
+        }
+        $uploadedFile = $uploadedFileResult[0];
+        $stop = null;
+        $deleted = false;
+        $message = '';
+        try {
+            $deleted = Storage::disk(env('FILESYSTEM_DRIVER'))->delete($uploadedFile->server_file);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+        }
+        $uploadRepository->destroy($uploadedFile->id);
+        $res = [
+            'success' => $deleted,
+            'message' => $message,
+        ];
+        return response()->json($res);
     }
 
 }

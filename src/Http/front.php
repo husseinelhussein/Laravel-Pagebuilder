@@ -4,9 +4,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'middleware' => ['web'],
-    'prefix' => 'themes/pagebuilder',
     'namespace' => 'HansSchouten\LaravelPageBuilder\Http\Controllers\Front'
 ], function () {
-    // Handle all assets requests
-    Route::get( '/{path}', 'AssetsController@assets')->where('path', '.*');
+    Route::get( 'themes/pagebuilder/{path}', 'AssetsController@assets')->where('path', '.*');
+    Route::get( 'uploads/pagebuilder/{path}', 'AssetsController@uploadedAssets')->where('path', '.*');
 });
