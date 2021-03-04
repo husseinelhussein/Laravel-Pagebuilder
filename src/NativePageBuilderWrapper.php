@@ -10,8 +10,8 @@ use PHPageBuilder\Modules\GrapesJS\PageBuilder;
 use PHPageBuilder\Modules\GrapesJS\PageRenderer;
 use PHPageBuilder\Modules\GrapesJS\Thumb\ThumbGenerator;
 use PHPageBuilder\Modules\GrapesJS\Upload\Uploader;
-use PHPageBuilder\Repositories\PageRepository;
-use PHPageBuilder\Repositories\PageTranslationRepository;
+use HansSchouten\LaravelPageBuilder\Repositories\PageRepository;
+use HansSchouten\LaravelPageBuilder\Repositories\PageTranslationRepository;
 use PHPageBuilder\Repositories\UploadRepository;
 use PHPageBuilder\UploadedFile;
 

@@ -10,6 +10,22 @@ class Page extends BasePage implements PageContract
      */
     protected $variables;
 
+    public function setData($data, $fullOverwrite = true)
+    {
+        // if page builder data is set, try to decode json
+        if (isset($data['data']) && is_string($data['data'])) {
+            $data['data'] = json_decode($data['data'], true);
+        }
+        if ($fullOverwrite) {
+            $this->attributes = $data;
+        }  elseif (is_array($data)) {
+            $this->attributes = is_null($this->attributes) ? [] : $this->attributes;
+            foreach ($data as $key => $value) {
+                $this->attributes[$key] = $value;
+            }
+        }
+    }
+
     /**
      * Gets the page meta
      *

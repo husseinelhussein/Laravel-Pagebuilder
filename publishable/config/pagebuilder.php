@@ -14,7 +14,8 @@ return [
         'language' => 'en',
         'assets_url' => '/assets',
         'editor_css' => '',
-        'uploads_url' => '/uploads'
+        'uploads_url' => '/uploads',
+        'multi_saas_id' => 1,
     ],
 
     /*
