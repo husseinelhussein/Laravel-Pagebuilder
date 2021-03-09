@@ -27,7 +27,11 @@ class ThemeBlockWrapper extends ThemeBlock
     {
         $basePath = $this->getFolder() . '/';
         if($this->forPageBuilder){
-            return file_exists($basePath . $this->builderViewFile);
+            $exists = file_exists($basePath . $this->builderViewFile);
+            if(!$exists){
+                $exists = file_exists($basePath . $this->viewFile);
+            }
+            return $exists;
         }
         else {
             return file_exists($basePath . $this->viewFile);
