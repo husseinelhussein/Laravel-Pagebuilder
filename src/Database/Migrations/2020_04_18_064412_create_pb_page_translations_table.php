@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePageTranslationsTable extends Migration
+class CreatePbPageTranslationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,15 +16,17 @@ class CreatePageTranslationsTable extends Migration
         Schema::create(config('pagebuilder.storage.database.prefix') . 'page_translations', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('page_id');
+            $table->integer('multi_saas_id')->unsigned();
             $table->string('locale', 50);
             $table->string('title', 255);
             $table->string('route', 255);
             $table->timestamps();
 
-            $table->unique(['page_id', 'locale']);
+            $table->unique(['page_id', 'locale', 'multi_saas_id']);
             $table->foreign('page_id')->references('id')
                 ->on(config('pagebuilder.storage.database.prefix') . 'pages')
                 ->onUpdate('cascade')->onDelete('cascade');
+
 
         });
 

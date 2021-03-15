@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePagesTable extends Migration
+class CreatePbPagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -20,6 +20,8 @@ class CreatePagesTable extends Migration
             $table->string('route', 512)->unique();
             $table->string('layout', 256);
             $table->longText('data')->nullable();
+            $table->integer('multi_saas_id')->unsigned();
+            $table->longText('meta')->nullable();
             $table->timestamps();
         });
     }
