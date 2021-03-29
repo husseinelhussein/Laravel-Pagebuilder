@@ -5,6 +5,8 @@ return [
     'noticeOnUnload' => false,
     'avoidInlineStyle' => true,
     'allowScripts' => true,
+    'fromElement' => true,
+    'baseCss' => file_get_contents(__DIR__ . '/basecss.css'),
     'storageManager' => [
         'type' => 'remote',
         'autoload' => false,
