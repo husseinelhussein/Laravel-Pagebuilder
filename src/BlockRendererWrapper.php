@@ -82,14 +82,14 @@ class BlockRendererWrapper extends BlockRenderer
         ];
         $themeName = $this->theme->getThemeSlug();
         $slug = $themeBlock->getSlug();
-        $viewPath = 'pagebuilder::' . $themeName . '.blocks.' . $slug;
-        if($this->forPageBuilder){
-            $viewPath .= '.builder_view';
-        }
-        else {
-            $viewPath .= '.view';
-        }
-        $html = view()->make($viewPath, $vars);
+        // get the view name:
+        $filePath = $themeBlock->getViewFile();
+        $fileName = last(explode('/', $filePath));
+        // remove the extension:
+        $fileName = array_first(explode('.', $fileName));
+
+        $namespace = 'pagebuilder::' . $themeName . '.blocks.' . $slug . '.' . $fileName;
+        $html = view()->make($namespace, $vars);
         return $html;
     }
 

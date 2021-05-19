@@ -14,6 +14,7 @@ class ThemeBlockWrapper extends ThemeBlock
     protected $modelFile = "model.php";
     protected $builderViewFile = "builder_view.blade.php";
     protected $viewFile = "view.blade.php";
+    protected $phpViewFile = "view.php";
     protected $htmlViewFile = "view.html";
     protected $controllerFile = "controller.php";
     protected $controllerClassName = "Controller";
@@ -40,16 +41,27 @@ class ThemeBlockWrapper extends ThemeBlock
 
     public function getViewFile()
     {
-        $basPath =  $this->getFolder() . '/';
+        $basePath =  $this->getFolder() . '/';
         if ($this->isPhpBlock()) {
             if ($this->forPageBuilder) {
-                return $basPath . $this->builderViewFile;
+                if(file_exists($basePath . $this->builderViewFile)){
+                    return $basePath . $this->builderViewFile;
+                }
+                else if(file_exists($basePath . $this->viewFile)){
+                    return $basePath . $this->viewFile;
+                }
+                else if(file_exists($basePath . $this->phpViewFile)){
+                    return $basePath . $this->phpViewFile;
+                }
             }
-            else {
-                return $basPath . $this->viewFile;
+            elseif(file_exists($basePath . $this->viewFile)){
+                return $basePath . $this->viewFile;
+            }
+            elseif(file_exists($basePath . $this->viewFile)){
+                return $basePath . $this->viewFile;
             }
         }
-        return $basPath . $this->htmlViewFile;
+        return $basePath . $this->htmlViewFile;
     }
 
     public function getModelFile()
