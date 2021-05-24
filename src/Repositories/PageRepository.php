@@ -1,5 +1,6 @@
 <?php
 namespace HansSchouten\LaravelPageBuilder\Repositories;
+use HansSchouten\LaravelPageBuilder\Page;
 use Illuminate\Support\Facades\DB;
 use PHPageBuilder\Contracts\PageContract;
 use PHPageBuilder\Repositories\PageRepository as BaseRepository;
@@ -50,11 +51,57 @@ class PageRepository extends BaseRepository
             'layout' => $data['layout'],
             'meta' => isset($data['meta'])? $data['meta']: null,
             'multi_saas_id' => $multi_saas_id,
+            'data' => isset($data['data'])? json_encode($data['data']): null,
+            'created_at' => isset($data['created_at'])? $data['created_at']: null,
+            'updated_at' => isset($data['updated_at'])? $data['updated_at']: null,
         ]);
         if (! ($page instanceof PageContract)) {
             throw new Exception("Page not of type PageContract");
         }
         return $this->replaceTranslations($page, $data);
+    }
+
+    /**
+     * Duplicates a pagebuilder page instance along with its translations.
+     * @param $id
+     */
+    public function duplicate($id){
+        $stop = null;
+        /** @var Page $page */
+        $page = $this->findWithId($id);
+        $stop = null;
+        $translations = $page->getTranslations();
+        $pb_data = [
+            'layout' => $page->getLayout(),
+            'title' => [],
+            'route' => [],
+            'meta' => json_encode($page->getMeta()),
+            'data' => $page->getBuilderData(),
+        ];
+        foreach ($translations as $langCode => $translation) {
+            foreach (array_keys($translation) as $prop) {
+                if(is_int($prop)){
+                    unset($translation[$prop]);
+                }
+            }
+            $newTitle = $this->generateUniqueTitle($translation['title']);
+            if(!isset($pb_data['name'])){
+                $pb_data['name'] = $newTitle;
+            }
+            $pb_data['title'][$langCode] = $newTitle;
+            $pb_data['route'][$langCode] = $this->generateUniqueRoute($translation['route']);
+        }
+        $pb_page = $this->create($pb_data);
+        $m = 'Something went wrong, failed to create page';
+        if(!$pb_page){
+            throw new Exception($m);
+        }
+        $pb_page_tr_repo = new PageTranslationRepository;
+        $pb_page = $pb_page_tr_repo->findWhere('route', $pb_data['route']);
+        if(!$pb_page){
+            throw new Exception($m);
+        }
+        return $this->findWithId($pb_page[0]->page_id);
     }
 
     /** Overrides parent to use PageTranslationRepository and add multi_saas_id
@@ -135,5 +182,30 @@ class PageRepository extends BaseRepository
             $multi_saas_id = call_user_func($multi_saas_id);
         }
         return $multi_saas_id;
+    }
+
+    protected function generateUniqueRoute($existingRoute) {
+        $route = $this->generateUniqueColVal('route', $existingRoute);
+        return $route;
+    }
+
+    protected function generateUniqueTitle($existingTitle) {
+        $name = $this->generateUniqueColVal('title', $existingTitle, true);
+        return $name;
+    }
+
+    protected function generateUniqueColVal($col, $exitingVal, $space = false){
+        $pb_page_tr_repo = new PageTranslationRepository;
+        $number = 2;
+        do {
+            $newVal = $exitingVal . '-' . $number;
+            if($space){
+                $newVal = $exitingVal . ' - ' . $number;
+            }
+            $pb_page = $pb_page_tr_repo->findWhere($col, $newVal);
+            $number++;
+        }
+        while ( isset($pb_page) );
+        return $newVal;
     }
 }
