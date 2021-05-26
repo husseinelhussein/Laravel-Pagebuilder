@@ -4,6 +4,7 @@
 namespace HansSchouten\LaravelPageBuilder\Contracts;
 
 use PHPageBuilder\Contracts\PageContract as BaseContract;
+
 interface PageContract extends BaseContract
 {
     /**
@@ -22,4 +23,19 @@ interface PageContract extends BaseContract
      * @param array $variables
      */
     public function setVariables(array $variables):void;
+
+    /**
+     * Magic method to get a Page attribute.
+     *
+     * @param string $attribute
+     * @return mixed
+     */
+    public function __get(string $attribute);
+
+    /**
+     * @param string $setting
+     * @param null $locale
+     * @return PageTranslationContract|string|null
+     */
+    public function getTranslation(string $setting, $locale = null);
 }

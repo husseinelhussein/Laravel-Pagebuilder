@@ -2,11 +2,12 @@
 
 namespace HansSchouten\LaravelPageBuilder;
 
+use HansSchouten\LaravelPageBuilder\Contracts\PageTranslationContract;
 use HansSchouten\LaravelPageBuilder\Repositories\PageRepository;
 use PHPageBuilder\Contracts\PageContract;
-use PHPageBuilder\Contracts\PageTranslationContract;
+use PHPageBuilder\PageTranslation as BaseTranslation;
 
-class PageTranslation implements PageTranslationContract
+class PageTranslation extends BaseTranslation implements PageTranslationContract
 {
     /**
      * Return the page this translation belongs to.
@@ -17,5 +18,16 @@ class PageTranslation implements PageTranslationContract
     {
         $foreignKey = phpb_config('page.translation.foreign_key');
         return (new PageRepository())->findWithId($this->{$foreignKey});
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function __get($attribute)
+    {
+        if (array_key_exists($attribute, $this->attributes)) {
+            return $this->get($attribute);
+        }
+        return null;
     }
 }

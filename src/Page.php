@@ -54,4 +54,11 @@ class Page extends BasePage implements PageContract
         $this->variables = $variables;
     }
 
+    public function __get($attribute)
+    {
+        if (array_key_exists($attribute, $this->attributes)) {
+            return $this->get($attribute);
+        }
+        return $this->getTranslation($attribute);
+    }
 }

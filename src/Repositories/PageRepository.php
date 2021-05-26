@@ -64,6 +64,8 @@ class PageRepository extends BaseRepository
     /**
      * Duplicates a pagebuilder page instance along with its translations.
      * @param $id
+     *
+     * @return \HansSchouten\LaravelPageBuilder\Contracts\PageContract
      */
     public function duplicate($id){
         $stop = null;
@@ -194,13 +196,20 @@ class PageRepository extends BaseRepository
         return $name;
     }
 
-    protected function generateUniqueColVal($col, $exitingVal, $space = false){
+    protected function generateUniqueColVal($col, $exitingVal, $space = false) {
         $pb_page_tr_repo = new PageTranslationRepository;
         $number = 2;
         do {
-            $newVal = $exitingVal . '-' . $number;
-            if($space){
-                $newVal = $exitingVal . ' - ' . $number;
+            // remove any existing numbers
+            $exitingVal = preg_replace(['/(\s\-\s)\d+/','/(\-)\d+/'], '', $exitingVal);
+            $exitingVal = preg_replace('/\-\d+/', '', $exitingVal);
+            if ($space) {
+                $newVal = preg_replace('/\s\d+/', '', $exitingVal);
+                $newVal .= ' - ' . $number;
+            }
+            else {
+                $newVal = $exitingVal;
+                $newVal .= '-' . $number;
             }
             $pb_page = $pb_page_tr_repo->findWhere($col, $newVal);
             $number++;
