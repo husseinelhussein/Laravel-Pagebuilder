@@ -22,6 +22,10 @@ class PageBuilderController  extends Controller {
         if(!$page_id && !$route){
             abort(404);
         }
-        return $pageBuilder->handleRequest($route, $action);
+        $res = $pageBuilder->handleRequest($route, $action);
+        if(!$res){
+            abort(404);
+        }
+        return $res;
     }
 }
