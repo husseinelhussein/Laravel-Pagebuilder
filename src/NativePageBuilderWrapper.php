@@ -197,6 +197,7 @@ class NativePageBuilderWrapper extends PageBuilder
      */
     public function renderPage(PageContract $page, $language = null): string
     {
+        /** @var PageRendererWrapper $pageRenderer */
         $pageRenderer = phpb_instance(PageRendererWrapper::class, [$this->theme, $page]);
         if (! is_null($language)) {
             $pageRenderer->setLanguage($language);
