@@ -20,8 +20,14 @@ class PageRepository extends BaseRepository
     public function findWithId($id)
     {
         $table = config('pagebuilder.storage.database.prefix') . 'pages';
-        $multi_saas_id = $this->getMultiSaasId();
-        $res = DB::table($table)->where(['id' => $id, 'multi_saas_id' => $multi_saas_id])->first();
+        $is_multi_saas = phpb_config('general.is_multi_saas');
+        $where = [
+            'id' => $id,
+        ];
+        if ($is_multi_saas) {
+            $where['multi_saas_id'] = $this->getMultiSaasId();
+        }
+        $res = DB::table($table)->where($where)->first();
         $res = collect($res)->toArray();
         if(!$res){
             return null;
