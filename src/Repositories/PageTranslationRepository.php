@@ -10,8 +10,14 @@ class PageTranslationRepository extends BaseRepo implements PageTranslationRepos
     public function findWhere($column, $value)
     {
         $table = config('pagebuilder.storage.database.prefix') . 'page_translations';
-        $multi_saas_id = $this->getMultiSaasId();
-        $res = DB::table($table)->where(['multi_saas_id' => $multi_saas_id, $column => $value])->first();
+        $is_multi_saas = phpb_config('general.is_multi_saas');
+        $where = [
+            $column => $value,
+        ];
+        if ($is_multi_saas) {
+            $where['multi_saas_id'] = $this->getMultiSaasId();
+        }
+        $res = DB::table($table)->where($where)->first();
         if(!$res){
             return null;
         }
