@@ -12,7 +12,7 @@ use PHPageBuilder\Modules\GrapesJS\Thumb\ThumbGenerator;
 use PHPageBuilder\Modules\GrapesJS\Upload\Uploader;
 use HansSchouten\LaravelPageBuilder\Repositories\PageRepository;
 use HansSchouten\LaravelPageBuilder\Repositories\PageTranslationRepository;
-use PHPageBuilder\Repositories\UploadRepository;
+use HansSchouten\LaravelPageBuilder\Repositories\UploadRepository;
 use PHPageBuilder\UploadedFile;
 
 class NativePageBuilderWrapper extends PageBuilder
@@ -122,7 +122,7 @@ class NativePageBuilderWrapper extends PageBuilder
                 break;
             case 'upload_delete':
                 if (isset($_POST['id'])) {
-                    $this->handleFileDelete();
+                    return $this->handleFileDelete();
                 }
                 break;
             case 'renderBlock':
@@ -170,7 +170,14 @@ class NativePageBuilderWrapper extends PageBuilder
 
         // create an array of all uploaded assets
         $assets = [];
-        foreach ((new UploadRepository)->getAll() as $file) {
+        $multi_saas_id = $this->getMultiSaasId();
+        if ($multi_saas_id) {
+            $uploaded_assets = (new UploadRepository)->findWhere('multi_saas_id', $multi_saas_id);
+        }
+        else {
+            $uploaded_assets = (new UploadRepository)->getAll();
+        }
+        foreach ($uploaded_assets as $file) {
             $src = phpb_config('general.uploads_url') . '/' . $file->server_file;
             $assets[] = [
                 'src' => $src,
@@ -224,10 +231,16 @@ class NativePageBuilderWrapper extends PageBuilder
         $originalMime = $file->getMimeType();
         $originalFile = $file->getClientOriginalName();
         $publicId = sha1(uniqid(rand(), true));
-        $res = $file->store('uploads');
         $uploadRepository = new UploadRepository;
+        $multi_saas_id = $this->getMultiSaasId();
+        $folder = "uploads";
+        if($multi_saas_id){
+            $folder .= '/' . $multi_saas_id;
+        }
+        $res = $file->store($folder);
         /** @var UploadedFile $uploadedFile */
         $uploadedFile = $uploadRepository->create([
+            'multi_saas_id' => $multi_saas_id,
             'public_id' => $publicId,
             'original_file' => $originalFile,
             'mime_type' => $originalMime,
@@ -269,6 +282,18 @@ class NativePageBuilderWrapper extends PageBuilder
             'message' => $message,
         ];
         return response()->json($res);
+    }
+
+    protected function getMultiSaasId(){
+        $is_multi_saas = phpb_config('general.is_multi_saas');
+        if(!$is_multi_saas){
+            return null;
+        }
+        $multi_saas_id = phpb_config('general.multi_saas_id');
+        if(function_exists($multi_saas_id)){
+            $multi_saas_id = call_user_func($multi_saas_id);
+        }
+        return $multi_saas_id;
     }
 
 }
