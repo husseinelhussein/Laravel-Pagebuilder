@@ -15,7 +15,7 @@ class PageTranslationRepository extends BaseRepo implements PageTranslationRepos
             $column => $value,
         ];
         if ($is_multi_saas) {
-            $where['multi_saas_id'] = $this->getMultiSaasId();
+            $where['multi_saas_id'] = getMultiSaasId();
         }
         $res = DB::table($table)->where($where)->first();
         if(!$res){
@@ -23,13 +23,5 @@ class PageTranslationRepository extends BaseRepo implements PageTranslationRepos
         }
         $res = collect($res)->toArray();
         return $this->createInstances([$res]);
-    }
-
-    protected function getMultiSaasId(){
-        $multi_saas_id = phpb_config('general.multi_saas_id');
-        if(function_exists($multi_saas_id)){
-            $multi_saas_id = call_user_func($multi_saas_id);
-        }
-        return $multi_saas_id;
     }
 }

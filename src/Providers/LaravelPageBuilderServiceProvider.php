@@ -28,6 +28,7 @@ class LaravelPageBuilderServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        include __DIR__ . "/../Helper/general.php";
         $this->loadRoutesFrom(__DIR__ . '/../Http/admin.php');
         $this->loadRoutesFrom(__DIR__ . '/../Http/front.php');
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');

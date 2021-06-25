@@ -170,7 +170,7 @@ class NativePageBuilderWrapper extends PageBuilder
 
         // create an array of all uploaded assets
         $assets = [];
-        $multi_saas_id = $this->getMultiSaasId();
+        $multi_saas_id = getMultiSaasId();
         if ($multi_saas_id) {
             $uploaded_assets = (new UploadRepository)->findWhere('multi_saas_id', $multi_saas_id);
         }
@@ -232,7 +232,7 @@ class NativePageBuilderWrapper extends PageBuilder
         $originalFile = $file->getClientOriginalName();
         $publicId = sha1(uniqid(rand(), true));
         $uploadRepository = new UploadRepository;
-        $multi_saas_id = $this->getMultiSaasId();
+        $multi_saas_id = getMultiSaasId();
         $folder = "uploads";
         if($multi_saas_id){
             $folder .= '/' . $multi_saas_id;
@@ -282,18 +282,6 @@ class NativePageBuilderWrapper extends PageBuilder
             'message' => $message,
         ];
         return response()->json($res);
-    }
-
-    protected function getMultiSaasId(){
-        $is_multi_saas = phpb_config('general.is_multi_saas');
-        if(!$is_multi_saas){
-            return null;
-        }
-        $multi_saas_id = phpb_config('general.multi_saas_id');
-        if(function_exists($multi_saas_id)){
-            $multi_saas_id = call_user_func($multi_saas_id);
-        }
-        return $multi_saas_id;
     }
 
 }

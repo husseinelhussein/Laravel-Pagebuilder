@@ -25,7 +25,7 @@ class PageRepository extends BaseRepository
             'id' => $id,
         ];
         if ($is_multi_saas) {
-            $where['multi_saas_id'] = $this->getMultiSaasId();
+            $where['multi_saas_id'] = getMultiSaasId();
         }
         $res = DB::table($table)->where($where)->first();
         $res = collect($res)->toArray();
@@ -37,7 +37,7 @@ class PageRepository extends BaseRepository
     public function findWhere($column, $value)
     {
         $table = config('pagebuilder.storage.database.prefix') . 'pages';
-        $multi_saas_id = $this->getMultiSaasId();
+        $multi_saas_id = getMultiSaasId();
         $res = DB::table($table)->where(['multi_saas_id' => $multi_saas_id, $column => $value])->first();
         if(!$res){
             return null;
@@ -56,7 +56,7 @@ class PageRepository extends BaseRepository
                 return false;
             }
         }
-        $multi_saas_id = $this->getMultiSaasId();
+        $multi_saas_id = getMultiSaasId();
         $page = $this->superCreate([
             'name' => $data['name'],
             'layout' => $data['layout'],
@@ -141,7 +141,7 @@ class PageRepository extends BaseRepository
                 'locale' => $languageCode,
                 'title' => $data['title'][$languageCode],
                 'route' => $data['route'][$languageCode],
-                'multi_saas_id' => $this->getMultiSaasId(),
+                'multi_saas_id' => getMultiSaasId(),
             ]);
         }
 
@@ -187,14 +187,6 @@ class PageRepository extends BaseRepository
             'layout' => $data['layout'],
             'meta' => isset($data['meta'])? $data['meta']: null,
         ]);
-    }
-
-    protected function getMultiSaasId(){
-        $multi_saas_id = phpb_config('general.multi_saas_id');
-        if(function_exists($multi_saas_id)){
-            $multi_saas_id = call_user_func($multi_saas_id);
-        }
-        return $multi_saas_id;
     }
 
     protected function generateUniqueRoute($existingRoute) {
